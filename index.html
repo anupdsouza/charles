@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charles Proxy Setup Instructions</title>
+    <style>
+        /* Define colors as CSS variables for easy theme switching */
+        :root {
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --heading-color: #1a1a1a;
+            --card-bg-color: #ffffff;
+            --card-border-color: #e0e0e0;
+            --code-bg-color: #eeeeee;
+            --note-bg-color: #fffbe6;
+            --note-border-color: #ffc107;
+            --icon-color: #333;
+        }
+
+        /* Dark mode theme using a media query */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1c1c1e;
+                --text-color: #e2e2e7;
+                --heading-color: #ffffff;
+                --card-bg-color: #2c2c2e;
+                --card-border-color: #444446;
+                --code-bg-color: #3b3b3d;
+                --note-bg-color: rgba(88, 164, 255, 0.1);
+                --note-border-color: #58a4ff;
+                --icon-color: #e2e2e7;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            transition: background-color 0.2s, color 0.2s;
+            /* Smooth transition for theme change */
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--heading-color);
+        }
+
+        details {
+            background: var(--card-bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--card-border-color);
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.2s;
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 1rem 1rem 1rem 2.5rem;
+            /* Adjusted padding for icon */
+            cursor: pointer;
+            outline: none;
+            list-style: none;
+            /* Hide the default marker */
+            position: relative;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::before {
+            content: '►';
+            color: var(--icon-color);
+            position: absolute;
+            left: 1rem;
+            transform: rotate(0deg);
+            transition: transform 0.2s;
+        }
+
+        details[open]>summary::before {
+            transform: rotate(90deg);
+        }
+
+        .content {
+            padding: 0 1.5rem 1.5rem 2.5rem;
+            border-top: 1px solid var(--card-border-color);
+        }
+
+        li {
+            margin-bottom: 0.75em;
+        }
+
+        code {
+            background-color: var(--code-bg-color);
+            color: var(--text-color);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+        }
+
+        .note {
+            background-color: var(--note-bg-color);
+            border-left: 4px solid var(--note-border-color);
+            padding: 1em;
+            margin: 1em 0;
+            border-radius: 4px;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Charles Proxy Setup Instructions</h1>
+
+    <details>
+        <summary>iOS Simulator Setup</summary>
+        <div class="content">
+            <p>Setting up Charles on an iOS Simulator is straightforward as Charles can automatically install its certificate.</p>
+            <ol>
+                <li>Open Charles Proxy on your Mac.</li>
+                <li>Go to the menu bar and click <strong>Help > SSL Proxying > Install Charles Root Certificate in iOS Simulators</strong>.</li>
+                <li>Launch the iOS Simulator.</li>
+                <li>On the Simulator, go to <strong>Settings > General > About > Certificate Trust Settings</strong>.</li>
+                <li>Find the "Charles Proxy Custom Root Certificate" and toggle it ON to enable full trust.</li>
+                <li>Network traffic from the simulator will now automatically be proxied through Charles.</li>
+            </ol>
+        </div>
+    </details>
+
+    <details open> <!-- This section will be open by default for prominence -->
+        <summary>Physical iOS Device Setup</summary>
+        <div class="content">
+            <div class="note">
+                <strong>Important:</strong> Your Mac running Charles and your iOS device must be connected to the same Wi-Fi network. Disable any VPNs on both devices.
+            </div>
+            <ol>
+                <li>Open Charles on your Mac.</li>
+                <li>Go to the menu bar and click <strong>Help > SSL Proxying > Install Charles Root Certificate on a Mobile Device or Remote Browser</strong>.</li>
+                <li>A popup will appear with an IP address and port number, like: <code>192.168.1.10:8888</code>. Keep this information handy.</li>
+                <li>On your iOS device, go to <strong>Settings > Wi-Fi</strong>.</li>
+                <li>Tap the <strong>(i)</strong> icon next to your connected Wi-Fi network name.</li>
+                <li>Scroll down to <strong>Configure Proxy</strong> and select <strong>Manual</strong>.</li>
+                <li>For <strong>Server</strong>, enter the IP address from the Charles popup (e.g., <code>192.168.1.10</code>).</li>
+                <li>For <strong>Port</strong>, enter the port from the Charles popup (usually <code>8888</code>).</li>
+                <li>Tap <strong>Save</strong> in the top-right corner. A prompt may appear on your Mac to allow the connection; click <strong>Allow</strong>.</li>
+                <li>On your iOS device, open Safari and navigate to <strong>chls.pro/ssl</strong>.</li>
+                <li>A prompt will appear asking to download a configuration profile. Tap <strong>Allow</strong>.</li>
+                <li>Go to <strong>Settings > General > VPN & Device Management</strong> (or <strong>Profiles & Device Management</strong> on older iOS).</li>
+                <li>Tap on the "Charles Proxy" downloaded profile and tap <strong>Install</strong>. Follow the prompts to complete the installation.</li>
+                <li>Finally, go to <strong>Settings > General > About > Certificate Trust Settings</strong>.</li>
+                <li>Find the "Charles Proxy Custom Root Certificate" and toggle it ON to enable full trust.</li>
+            </ol>
+            <p>Charles will now capture network traffic from your device. To disable it, simply return to your device's Wi-Fi settings and turn <strong>Configure Proxy</strong> OFF.</p>
+        </div>
+    </details>
+
+</body>
+
+</html>
