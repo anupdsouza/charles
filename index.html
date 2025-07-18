@@ -17,9 +17,10 @@
             --note-bg-color: #fffbe6;
             --note-border-color: #ffc107;
             --icon-color: #333;
+            --link-color: #0066cc; /* Standard blue for light mode */
         }
 
-        /* Dark mode theme using a media query */
+        /* Dark mode theme */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #1c1c1e;
@@ -31,6 +32,7 @@
                 --note-bg-color: rgba(88, 164, 255, 0.1);
                 --note-border-color: #58a4ff;
                 --icon-color: #e2e2e7;
+                --link-color: #58a4ff; /* A lighter, more pleasant blue for dark mode */
             }
         }
 
@@ -43,39 +45,36 @@
             margin: 40px auto;
             padding: 0 20px;
             transition: background-color 0.2s, color 0.2s;
-            /* Smooth transition for theme change */
         }
-
+        
         h1 {
             text-align: center;
             color: var(--heading-color);
         }
-
+        
         details {
             background: var(--card-bg-color);
             border-radius: 8px;
             border: 1px solid var(--card-border-color);
             margin-bottom: 1rem;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: background-color 0.2s;
         }
-
+        
         summary {
             font-weight: 600;
             font-size: 1.1rem;
             padding: 1rem 1rem 1rem 2.5rem;
-            /* Adjusted padding for icon */
             cursor: pointer;
             outline: none;
             list-style: none;
-            /* Hide the default marker */
             position: relative;
         }
-
+        
         summary::-webkit-details-marker {
             display: none;
         }
-
+        
         summary::before {
             content: '►';
             color: var(--icon-color);
@@ -84,20 +83,20 @@
             transform: rotate(0deg);
             transition: transform 0.2s;
         }
-
-        details[open]>summary::before {
-            transform: rotate(90deg);
+        
+        details[open] > summary::before {
+             transform: rotate(90deg);
         }
-
+        
         .content {
             padding: 0 1.5rem 1.5rem 2.5rem;
             border-top: 1px solid var(--card-border-color);
         }
-
+        
         li {
             margin-bottom: 0.75em;
         }
-
+        
         code {
             background-color: var(--code-bg-color);
             color: var(--text-color);
@@ -105,7 +104,7 @@
             border-radius: 3px;
             font-family: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
         }
-
+        
         .note {
             background-color: var(--note-bg-color);
             border-left: 4px solid var(--note-border-color);
@@ -114,7 +113,15 @@
             border-radius: 4px;
             transition: background-color 0.2s, border-color 0.2s;
         }
+        
+        /* Style for anchor tags (links) */
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
     </style>
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-574EGJF606"></script>
     <script>
@@ -145,7 +152,7 @@
         </div>
     </details>
 
-    <details open> <!-- This section will be open by default for prominence -->
+    <details open>
         <summary>Physical iOS Device Setup</summary>
         <div class="content">
             <div class="note">
@@ -173,5 +180,7 @@
     </details>
 
 </body>
+
+</html>
 
 </html>
