@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,9 +72,7 @@
             position: relative;
         }
         
-        summary::-webkit-details-marker {
-            display: none;
-        }
+        summary::-webkit-details-marker { display: none; }
         
         summary::before {
             content: '►';
@@ -86,18 +83,20 @@
             transition: transform 0.2s;
         }
         
-        details[open] > summary::before {
-             transform: rotate(90deg);
-        }
+        details[open] > summary::before { transform: rotate(90deg); }
         
         .content {
             padding: 0 1.5rem 1.5rem 2.5rem;
             border-top: 1px solid var(--card-border-color);
         }
-        
-        li {
-            margin-bottom: 0.75em;
+
+        h3 {
+            margin-top: 2rem;
+            border-bottom: 1px solid var(--card-border-color);
+            padding-bottom: 0.5rem;
         }
+        
+        li { margin-bottom: 1.5em; }
         
         code {
             background-color: var(--code-bg-color);
@@ -111,16 +110,23 @@
             background-color: var(--note-bg-color);
             border-left: 4px solid var(--note-border-color);
             padding: 1em;
-            margin: 1em 0;
+            margin: 1.5em 0;
             border-radius: 4px;
             transition: background-color 0.2s, border-color 0.2s;
         }
         
-        /* Style for anchor tags (links) */
         a {
             color: var(--link-color);
             text-decoration: underline;
             transition: color 0.2s;
+        }
+
+        .step-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px solid var(--card-border-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
     </style>
     
@@ -130,7 +136,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-574EGJF606');
     </script>
 </head>
@@ -142,15 +147,62 @@
     <details>
         <summary>iOS Simulator Setup</summary>
         <div class="content">
-            <p>Setting up Charles on an iOS Simulator is straightforward as Charles can automatically install its certificate.</p>
+            <p>This is a complete guide to configuring Charles Proxy to monitor traffic from an iOS Simulator running on your Mac.</p>
+
+            <h3>Part 1: Certificate Setup (The Foundation)</h3>
+            <div class="note">
+                <strong>Goal:</strong> Get your Mac and the iOS Simulator to trust Charles. You must do both.
+            </div>
             <ol>
-                <li>Open Charles Proxy on your Mac.</li>
-                <li>Go to the menu bar and click <strong>Help > SSL Proxying > Install Charles Root Certificate in iOS Simulators</strong>.</li>
-                <li>Launch the iOS Simulator.</li>
-                <li>On the Simulator, go to <strong>Settings > General > About > Certificate Trust Settings</strong>.</li>
-                <li>Find the "Charles Proxy Custom Root Certificate" and toggle it ON to enable full trust.</li>
-                <li>Network traffic from the simulator will now automatically be proxied through Charles.</li>
+                <li><strong>Enable macOS Proxy:</strong> Before anything else, ensure Charles is allowed to capture traffic from your Mac. Go to <strong>Proxy > macOS Proxy</strong> and make sure it is checked.
+                    <img class="step-image" src="assets/images/3.jpg" alt="Charles menu showing macOS Proxy enabled.">
+                </li>
+                <li><strong>Install Certificate on macOS:</strong> Go to <strong>Help > SSL Proxying > Install Charles Root Certificate</strong>. This will open the macOS Keychain Access application.
+                    <img class="step-image" src="assets/images/13.jpg" alt="Keychain Access with 'charles' searched, showing the Charles Proxy certificate.">
+                </li>
+                <li><strong>Trust Certificate on macOS:</strong> In Keychain Access, find the "Charles Proxy..." certificate, double-click it, expand the "Trust" section, and change "When using this certificate" to <strong>Always Trust</strong>. You will need to enter your system password to save this change. This is critical to prevent SSL handshake errors.
+                    <img class="step-image" src="assets/images/14.jpg" alt="Charles certificate trust settings set to Always Trust.">
+                </li>
+                 <li><strong>Install Certificate on iOS Simulator:</strong> Now, do the same for the simulator. Go to <strong>Help > SSL Proxying > Install Charles Root Certificate in iOS Simulators</strong>.
+                    <img class="step-image" src="assets/images/1.jpg" alt="Charles menu showing Install Charles Root Certificate in iOS Simulators.">
+                    <img class="step-image" src="assets/images/2.jpg" alt="Charles popup confirming certificate installation on the simulator.">
+                </li>
+                <li><strong>Trust Certificate on iOS Simulator:</strong> Launch the simulator. Go to <strong>Settings > General > About > Certificate Trust Settings</strong>.
+                    <img class="step-image" src="assets/images/11.jpg" alt="iOS Simulator Settings screen showing Certificate Trust Settings option.">
+                </li>
+                <li>Find the "Charles Proxy..." certificate and toggle the switch ON to enable full trust.
+                    <img class="step-image" src="assets/images/12.jpg" alt="iOS Simulator screen showing the Charles Proxy certificate switch turned on.">
+                </li>
             </ol>
+
+            <h3>Part 2: Targeting Specific Traffic (The Fun Part)</h3>
+            <div class="note">
+                <strong>Goal:</strong> Tell Charles exactly which web traffic you want to decrypt and record, which makes debugging much easier.
+            </div>
+            <ol>
+                <li><strong>Set SSL Proxying Location:</strong> To decrypt traffic, you must specify the domain. Go to <strong>Proxy > SSL Proxying Settings...</strong>.
+                    <img class="step-image" src="assets/images/4.jpg" alt="Charles menu showing SSL Proxying Settings.">
+                </li>
+                <li>Click <strong>Add</strong> and enter the host you want to inspect (e.g., <code>api.example.com</code>). To capture all subdomains, use a wildcard like <code>*.google.com</code>. Click OK.
+                    <img class="step-image" src="assets/images/5.jpg" alt="Adding a new location to SSL Proxying Settings.">
+                </li>
+                <li>Your location will now be added. Ensure the "Enable SSL Proxying" checkbox at the top is checked.
+                    <img class="step-image" src="assets/images/6.jpg" alt="SSL Proxying Settings window showing an entry for google.com.">
+                </li>
+                <li><strong>Set Recording Location (Optional but Recommended):</strong> To avoid seeing ALL network traffic in Charles, you can specify which domains to record. Go to <strong>Proxy > Recording Settings...</strong>.
+                    <img class="step-image" src="assets/images/7.jpg" alt="Charles menu showing Recording Settings.">
+                </li>
+                 <li>Select the <strong>Include</strong> tab and click <strong>Add</strong>.
+                    <img class="step-image" src="assets/images/8.jpg" alt="Empty Recording Settings window.">
+                </li>
+                <li>Add the same host you want to inspect (e.g., <code>*.google.com</code>). This tells Charles to only show traffic matching this pattern in its session list.
+                     <img class="step-image" src="assets/images/9.jpg" alt="Adding a new location to Recording Settings.">
+                </li>
+                <li>With this setting, your Charles session will be clean and only contain traffic from the domains you specified, making debugging much easier.
+                    <img class="step-image" src="assets/images/10.jpg" alt="Recording Settings window showing a new entry.">
+                </li>
+            </ol>
+            <p>You're all set! Now when you use your app in the simulator, only the targeted traffic will appear in Charles, and it will be decrypted so you can inspect the request and response bodies.</p>
         </div>
     </details>
 
@@ -182,7 +234,5 @@
     </details>
 
 </body>
-
-</html>
 
 </html>
